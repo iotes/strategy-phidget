@@ -14,7 +14,6 @@ on:
 jobs:
 
   bump-version:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout source code"
