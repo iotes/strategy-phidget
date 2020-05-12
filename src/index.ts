@@ -1,47 +1,110 @@
-import mqtt, { MqttClient } from 'mqtt'
+import phidget22 from 'phidget22'
 import {
   DeviceFactory,
+  HostFactory,
   HostConfig,
   Strategy,
+  Iotes,
+  createHostDispatchable,
   ClientConfig,
-  DeviceConfig,
-} from 'iotes'
+} from '@iotes/core'
 import { DeviceTypes, StrategyConfig } from './types'
+import { createDeviceFactory } from './deviceFactory'
 
-export const mqttStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
+export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   hostDispatch,
   deviceDispatch,
   hostSubscribe,
   deviceSubscribe,
-}) => async (
+}: Iotes): HostFactory<StrategyConfig, DeviceTypes> => async (
   hostConfig: HostConfig<StrategyConfig>,
   clientConfig: ClientConfig,
 ): Promise<DeviceFactory<DeviceTypes>> => {
-  // HOST FACTORY
-  // Do host set up here
+  const { name, host } = hostConfig
+  const hostPath = `ws://${hostConfig.host}:${hostConfig.port}`
 
-  const deviceFactory = (): DeviceFactory<DeviceTypes> => {
-    // DEVICE FACTORIES
-
-    const createDevice = async (
-      deviceConfig: DeviceConfig<'DEVICE_TYPE'>,
-    ) => {
-      // Do device set up here
-      const deviceSetUp = () => {}
-
-      deviceSetUp()
-
-      return deviceConfig
-    }
-
-    // Return dictionary of device factories
-    return {
-      DEVICE_TYPE: createDevice,
-    }
+  let port = null
+  try {
+    port = Number(hostConfig.port)
+  } catch {
+    throw Error('Unable to cast port to number type')
   }
 
-  return deviceFactory()
+  const connection = new phidget22.Connection({
+    hostname: host,
+    port,
+    onAuthenticationNeeded: () => {
+      hostDispatch(
+        createHostDispatchable(
+          name,
+          'CONNECT',
+          {},
+          hostConfig,
+          'PHIDGET22_HOST',
+          {
+            message: 'Authentiction Needed',
+            level: 'ERROR',
+          },
+        ),
+      )
+    },
+    onConnect: () => {
+      hostDispatch(
+        createHostDispatchable(
+          name,
+          'CONNECT',
+          {},
+          hostConfig,
+          'PHIDGET22_HOST',
+        ),
+      )
+    },
+    onDisconnect: () => {
+      hostDispatch(
+        createHostDispatchable(
+          name,
+          'DISCONNECT',
+          {},
+          hostConfig,
+          'PHIDGET22_HOST',
+        ),
+      )
+    },
+    onError: (code: string, message: string) => {
+      hostDispatch(
+        createHostDispatchable(
+          name,
+          'CONNECT',
+          {},
+          hostConfig,
+          'PHIDGET22_HOST',
+          { message, code, level: 'WARN' },
+        ),
+      )
+    },
+  })
+
+  await connection
+    .connect()
+    .catch((err: { message: string; errorCode: string }) => {
+      hostDispatch(
+        createHostDispatchable(
+          name,
+          'CONNECT',
+          {},
+          hostConfig,
+          'PHIDGET22_HOST',
+          { ...err, level: 'ERROR' },
+        ),
+      )
+    })
+
+  return createDeviceFactory({ config: hostConfig, connection }, clientConfig, {
+    hostDispatch,
+    hostSubscribe,
+    deviceDispatch,
+    deviceSubscribe,
+  })
 }
 
-// Export types
 export { DeviceTypes, StrategyConfig }
