@@ -27,6 +27,7 @@ jobs:
           path: build
 
   bump-version:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout source code"
@@ -81,4 +82,4 @@ jobs:
           name: build
       - run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}         
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

@@ -5,6 +5,7 @@
   "repository": "git://github.com/iotes/template-strategy.git",
   "homepage": "https://iotes.dev",
   "main": "build/index.js",
+  "private": false,
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
