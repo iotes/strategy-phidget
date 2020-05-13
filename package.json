@@ -2,7 +2,7 @@
   "name": "@iotes/strategy-phidget",
   "version": "0.0.4",
   "description": "A iotes strategies for phiget devices",
-  "repository": "git://github.com/iotes/template-strategy.git",
+  "repository": "git://github.com/iotes/strategy-phidget.git",
   "homepage": "https://iotes.dev",
   "main": "build/index.js",
   "private": false,
