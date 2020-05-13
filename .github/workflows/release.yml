@@ -21,34 +21,20 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v1
-        with:
-          name: build
-          path: build
-
-  bump-version:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout source code"
-        uses: "actions/checkout@v2"
-        with:
-          ref: ${{ github.ref }}
-      - name: "cat package.json"
-        run: cat ./package.json
-      - name: "Setup Node.js"
-        uses: "actions/setup-node@v1"
-        with:
-          node-version: 12
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         with:
           tag-prefix: ''
       - name: "cat package.json"
         run: cat ./package.json
-    
+      - name: upload build artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
+      
   publish-npm:
-    needs: bump-version
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -67,7 +53,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   publish-gpr:
-    needs: bump-version
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -80,6 +66,6 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: build
-      - run: npm publish
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

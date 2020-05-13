@@ -21,7 +21,6 @@ export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   clientConfig: ClientConfig,
 ): Promise<DeviceFactory<DeviceTypes>> => {
   const { name, host } = hostConfig
-  const hostPath = `ws://${hostConfig.host}:${hostConfig.port}`
 
   let port = null
   try {
