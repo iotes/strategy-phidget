@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "node ./__tests__/index.test.ts"
+    "test": "node ./__tests__/index.test.js"
   },
   "peerDependencies": {
     "@iotes/core": "^0.1.34"
