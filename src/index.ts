@@ -1,4 +1,3 @@
-import phidget22 from '@wethecurious/phidget22-bundle'
 import {
   DeviceFactory,
   HostFactory,
@@ -8,8 +7,10 @@ import {
   createHostDispatchable,
   ClientConfig,
 } from '@iotes/core'
+import phidget22 from './phidget'
 import { DeviceTypes, StrategyConfig } from './types'
 import { createDeviceFactory } from './deviceFactory'
+
 
 export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   hostDispatch,
@@ -28,6 +29,7 @@ export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   } catch {
     throw Error('Unable to cast port to number type')
   }
+
 
   const connection = new phidget22.Connection({
     hostname: host,

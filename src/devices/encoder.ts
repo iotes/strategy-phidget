@@ -1,5 +1,5 @@
 import { createDeviceDispatchable, createHostDispatchable } from '@iotes/core'
-import phidget22 from 'phidget22'
+import phidget22 from '../phidget'
 import { StrategyConfig, Device, RfidReader } from '../types'
 
 export const createCreateRotaryEncoder: Device<

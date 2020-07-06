@@ -18,7 +18,6 @@
     "@iotes/core": "^0.1.34"
   },
   "dependencies": {
-    "@wethecurious/phidget22-bundle": "^2.5.1",
     "phidget22": "^2.6.6"
   },
   "files": [
