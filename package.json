@@ -1,6 +1,6 @@
 {
   "name": "@iotes/strategy-phidget",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A iotes strategies for phiget devices",
   "repository": "git://github.com/iotes/strategy-phidget.git",
   "homepage": "https://iotes.dev",
