@@ -1,7 +1,7 @@
 import {
   DeviceFactory, HostConfig, Iotes, ClientConfig,
 } from '@iotes/core'
-import { createCreateRfidReader, createCreateRotaryEncoder } from './devices'
+import { createCreateRfidReader, createCreateRotaryEncoder, createCreateInterfaceKit } from './devices'
 import { DeviceTypes, StrategyConfig } from './types'
 
 export const createDeviceFactory = (
@@ -15,8 +15,12 @@ export const createDeviceFactory = (
   // ROTARY ENCODER
   const createRotaryEncoder = createCreateRotaryEncoder(host, client, iotes)
 
+  // INTERFACE KIT
+  const createInterfaceKit = createCreateInterfaceKit(host, client, iotes)
+
   return {
     RFID_READER: createRfidReader,
     ROTARY_ENCODER: createRotaryEncoder,
+    INTERFACE_KIT: createInterfaceKit,
   }
 }

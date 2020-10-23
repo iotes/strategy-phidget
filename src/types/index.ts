@@ -5,7 +5,7 @@ import {
   ClientConfig,
 } from '@iotes/core'
 
-export type DeviceTypes = 'RFID_READER' | 'ROTARY_ENCODER'
+export type DeviceTypes = 'RFID_READER' | 'ROTARY_ENCODER' | 'INTERFACE_KIT'
 export type StrategyConfig = {}
 
 interface GenericDevice {
@@ -42,4 +42,14 @@ export namespace RotaryEncoder {
   export interface Device extends GenericDevice {
     type: Type
   }
+}
+
+// INTERFACE KIT
+
+export namespace InterfaceKit {
+    export type Type = 'INTERFACE_KIT'
+    export type State = boolean
+    export interface Device extends GenericDevice {
+        type: Type
+    }
 }
