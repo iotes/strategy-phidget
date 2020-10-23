@@ -6,6 +6,7 @@ import {
   createCreateRotaryEncoder,
   createCreateDigitalInput,
   createCreateDigitalOutput,
+  createCreateInterfaceKit,
 } from './devices'
 import { DeviceTypes, StrategyConfig } from './types'
 
@@ -26,10 +27,14 @@ export const createDeviceFactory = (
   // DIGITAL OUTPUT
   const createDigitalOutput = createCreateDigitalOutput(host, client, iotes)
 
+  // INTERFACEKIT
+  const createInterfaceKit = createCreateInterfaceKit(host, client, iotes)
+
   return {
     RFID_READER: createRfidReader,
     ROTARY_ENCODER: createRotaryEncoder,
     DIGITAL_INPUT: createDigitalInput,
     DIGITAL_OUTPUT: createDigitalOutput,
+    INTERFACE_KIT: createInterfaceKit,
   }
 }
