@@ -15,7 +15,7 @@ export const createCreateDigitalInput: Device<
 
   const phidgetChannel = new phidget22.DigitalInput()
 
-  phidgetChannel.setHubPort(Number(channel))
+  phidgetChannel.setChannel(Number(channel))
 
   // Dispatch to app from phidget
   phidgetChannel.onStateChange = (
