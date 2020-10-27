@@ -2,10 +2,10 @@
 // It will print the output but will no provide ant test reports
 
 const { createIotes } = require('@iotes/core')
-const { phidgetStrategy } = require('../build')
+const { phidgetStrategy } = require('@iotes/strategy-phidget')
 
 const testTopologoy = {
-  hosts: [{ name: 'testapp/0', host: '192.168.0.11', port: '5661' }],
+  hosts: [{ name: 'testapp/0', host: 'localhost', port: '5661' }],
   devices: [
     {
       hostName: 'testapp/0',
