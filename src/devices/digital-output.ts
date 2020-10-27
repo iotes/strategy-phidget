@@ -15,7 +15,7 @@ export const createCreateDigitalOutput: Device<
 
   const phidgetChannel = new phidget22.DigitalOutput()
 
-  phidgetChannel.setHubPort(Number(channel))
+  phidgetChannel.setChannel(Number(channel))
 
   deviceSubscribe(
     (state: any) => {
