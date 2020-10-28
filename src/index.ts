@@ -1,4 +1,3 @@
-import phidget22 from 'phidget22'
 import {
   DeviceFactory,
   HostFactory,
@@ -8,8 +7,10 @@ import {
   createHostDispatchable,
   ClientConfig,
 } from '@iotes/core'
+import phidget22 from './phidget'
 import { DeviceTypes, StrategyConfig } from './types'
 import { createDeviceFactory } from './deviceFactory'
+
 
 export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   hostDispatch,
@@ -21,7 +22,6 @@ export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   clientConfig: ClientConfig,
 ): Promise<DeviceFactory<DeviceTypes>> => {
   const { name, host } = hostConfig
-  const hostPath = `ws://${hostConfig.host}:${hostConfig.port}`
 
   let port = null
   try {
@@ -29,6 +29,7 @@ export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   } catch {
     throw Error('Unable to cast port to number type')
   }
+
 
   const connection = new phidget22.Connection({
     hostname: host,
@@ -107,4 +108,9 @@ export const phidgetStrategy: Strategy<StrategyConfig, DeviceTypes> = ({
   })
 }
 
-export { DeviceTypes, StrategyConfig }
+export const strategy = phidgetStrategy
+
+export {
+  DeviceTypes,
+  StrategyConfig,
+}

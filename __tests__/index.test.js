@@ -5,7 +5,7 @@ const { createIotes } = require('@iotes/core')
 const { phidgetStrategy } = require('@iotes/strategy-phidget')
 
 const testTopologoy = {
-  hosts: [{ name: 'testapp/0', host: 'localhost', port: '5661' }],
+  hosts: [{ name: 'testapp/0', host: '127.0.0.1', port: '5661' }],
   devices: [
     {
       hostName: 'testapp/0',
