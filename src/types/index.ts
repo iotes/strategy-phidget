@@ -13,12 +13,18 @@ interface GenericDevice {
   type: string
 }
 
+type PhidgetDeviceConfig<DeviceTypes> = DeviceConfig<DeviceTypes> & {
+    hubPort?: number
+    serialNumber?: number
+    hubPortDevice?: boolean
+}
+
 // Device
 export type Device<StrategyConfig, DeviceType> = (
   host: { config: HostConfig<StrategyConfig>; connection: any },
   client: ClientConfig,
   iotes: Iotes,
-) => (device: DeviceConfig<DeviceType>) => Promise<DeviceConfig<DeviceType>>
+) => (device: PhidgetDeviceConfig<DeviceType>) => Promise<PhidgetDeviceConfig<DeviceType>>
 
 // RFID READER
 
@@ -48,6 +54,7 @@ export namespace RotaryEncoder {
 
 export namespace DigitalInput {
   export type Type = 'DIGITAL_INPUT'
+  export type State = boolean
   export interface Device extends GenericDevice {
     type: Type
   }
@@ -57,6 +64,7 @@ export namespace DigitalInput {
 
 export namespace DigitalOutput {
   export type Type = 'DIGITAL_OUTPUT'
+  export type State = boolean
   export interface Device extends GenericDevice {
     type: Type
   }

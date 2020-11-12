@@ -1,63 +1,65 @@
-// REL1300_0 & REL1301
+// Used & Tested on Interface Kits, REL1300_0 & REL1301
 
 import { createDeviceDispatchable, createHostDispatchable } from '@iotes/core'
-import phidget22 from 'phidget22'
+import phidget22 from '../phidget'
 import { StrategyConfig, Device, DigitalOutput } from '../types'
 
-export const createCreateDigitalOutput: Device<
-  StrategyConfig,
-  DigitalOutput.Type
-> = (host, client, iotes) => async (device) => {
-  const { type, name, channel } = device
-  const {
-    hostDispatch, hostSubscribe, deviceDispatch, deviceSubscribe,
-  } = iotes
+export const createCreateDigitalOutput: Device<StrategyConfig, DigitalOutput.Type> = (
+    host,
+    client,
+    iotes
+) => async (device) => {
+    const { name, channel, serialNumber, hubPort, hubPortDevice } = device
+    const { hostDispatch, deviceSubscribe } = iotes
 
-  const phidgetChannel = new phidget22.DigitalOutput()
+    const phidgetChannel = new phidget22.DigitalOutput()
 
-  phidgetChannel.setHubPort(Number(channel))
+    phidgetChannel.setDeviceSerialNumber(Number(serialNumber))
+    phidgetChannel.setIsHubPortDevice(Boolean(hubPortDevice))
+    phidgetChannel.setHubPort(Number(hubPort))
+    phidgetChannel.setChannel(Number(channel))
 
-  deviceSubscribe(
+    //TODO: Better Error Handling?
+    deviceSubscribe(
     (state: any) => {
-      if (state[name] && state[name]?.['@@iotes_storeId']) {
+        if (state[name] && state[name]?.['@@iotes_storeId']) {
         const parsedPayload:number = parseInt(state[name]?.payload, 10)
         if (parsedPayload != null && !Number.isNaN(parsedPayload)) {
-          phidgetChannel.setDutyCycle(parsedPayload)
+            phidgetChannel.setDutyCycle(parsedPayload)
         } else {
-          console.warn('Phidget Digital Output requires an integer as a payload. EG createDeviceDispatchable(\'DEVICENAME\', \'UPDATE\', 1)')
+            console.warn('Phidget Digital Output requires an integer as a payload. EG createDeviceDispatchable(\'DEVICENAME\', \'UPDATE\', 1)')
         }
-      }
+        }
     },
     [name],
-  )
+    )
 
-  // Open Channel
-  await phidgetChannel
+// Open Channel
+    await phidgetChannel
     .open(5000)
-    .then(() => phidgetChannel.setEnabled(true))
     .then(() => {
-      hostDispatch(
+        hostDispatch(
         createHostDispatchable(
-          host.config.name,
-          'DEVICE_CONNECT',
-          { deviceName: name, channel: `${channel}` },
-          host.config,
-          'PHIDGET22_DIGITAL_OUTPUT',
+            host.config.name,
+            'DEVICE_CONNECT',
+            { deviceName: name, channel: `${channel}` },
+            host.config,
+            'DIGITAL_OUTPUT',
         ),
-      )
+        )
     })
     .catch((err: { message: string; errorCode: string }) => {
-      hostDispatch(
+        hostDispatch(
         createHostDispatchable(
-          host.config.name,
-          'DEVICE_CONNECT',
-          { deviceName: name, channel: `${channel}` },
-          host.config,
-          'PHIDGET22_DIGITAL_OUTPUT',
-          { message: JSON.stringify(err), level: 'WARN' },
+            host.config.name,
+            'DEVICE_CONNECT',
+            { deviceName: name, channel: `${channel}` },
+            host.config,
+            'DIGITAL_OUTPUT',
+            { message: JSON.stringify(err), level: 'WARN' },
         ),
-      )
+        )
     })
 
-  return device
+    return device
 }

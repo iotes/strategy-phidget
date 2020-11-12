@@ -27,6 +27,8 @@
     <Content Include="tsconfig.json" />
     <Content Include="README.md" />
     <TypeScriptCompile Include="src\deviceFactory.ts" />
+    <TypeScriptCompile Include="src\devices\digital-input.ts" />
+    <TypeScriptCompile Include="src\devices\digital-output.ts" />
     <TypeScriptCompile Include="src\devices\interfacekit.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

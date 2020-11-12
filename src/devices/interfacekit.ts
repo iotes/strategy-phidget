@@ -1,5 +1,5 @@
 import { createDeviceDispatchable, createHostDispatchable } from '@iotes/core'
-import phidget22 from 'phidget22'
+import phidget22 from '../phidget'
 import { InterfaceKit, StrategyConfig, Device } from '../types'
 
 export const createCreateInterfaceKit: Device<StrategyConfig, InterfaceKit.Type> = (
@@ -7,13 +7,16 @@ export const createCreateInterfaceKit: Device<StrategyConfig, InterfaceKit.Type>
   client,
   iotes,
 ) => async (device) => {
-  const { name, channel } = device
+    const { name, channel, serialNumber, hubPort, hubPortDevice } = device
   const {
     hostDispatch, deviceDispatch,
   } = iotes
 
   const phidgetChannel = await new phidget22.DigitalInput()
 
+  phidgetChannel.setDeviceSerialNumber(serialNumber)
+  phidgetChannel.setIsHubPortDevice(hubPortDevice)
+  phidgetChannel.setHubPort(hubPort)
   phidgetChannel.setChannel(channel)
 
   phidgetChannel.onStateChange = (
@@ -25,12 +28,12 @@ export const createCreateInterfaceKit: Device<StrategyConfig, InterfaceKit.Type>
         'INPUT',
         { state },
         host.config,
-        'PHIDGET22_INTERFACEKIT',
+        'INTERFACE_KIT',
       ),
     )
   }
 
-  phidgetChannel
+  await phidgetChannel
     .open(5000)
     // .then(() => phidgetChannel.setEnabled(true))
     .then(() => {
@@ -40,7 +43,7 @@ export const createCreateInterfaceKit: Device<StrategyConfig, InterfaceKit.Type>
           'DEVICE_CONNECT',
           { deviceName: name, channel: `${channel}` },
           host.config,
-          'PHIDGET22_INTERFACEKIT',
+          'INTERFACE_KIT',
         ),
       )
     })
@@ -51,7 +54,7 @@ export const createCreateInterfaceKit: Device<StrategyConfig, InterfaceKit.Type>
           'DEVICE_CONNECT',
           { deviceName: name, channel: `${channel}` },
           host.config,
-          'PHIDGET22_INTERFACEKIT',
+          'INTERFACE_KIT',
           { message: JSON.stringify(err), level: 'WARN' },
         ),
       )
